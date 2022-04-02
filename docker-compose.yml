@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  telegram-nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: 'telegram-nginx'
+    restart: always
+    ports:
+      - "18980:80"
+    volumes:
+      - .:/app/
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  telegram:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: 'telegram-php'
+    restart: always
+    volumes:
+      - .:/app/
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  filters:
+    driver: local
+  proxy-profiles:
+    driver: local
