@@ -58,8 +58,7 @@ class ClassStorage
      * @return ClassStorage|Configuration|Api|Telegram|Serializer|ClientInterface
      * @throws TelegramBotException
      */
-    public static function instance(string $class = null, object $current = null):
-    ClassStorage|Configuration|Api|Telegram|Serializer|ClientInterface
+    public static function instance(string $class = null, object $current = null): ClassStorage|Configuration|Api|Telegram|Serializer|ClientInterface
     {
         if (!in_array($class, self::ALLOWED_CLASSES)) {
             throw new TelegramBotException('Class not allowed.');

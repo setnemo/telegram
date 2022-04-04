@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setnemo\Telegram;
 
+use JMS\Serializer\Serializer;
 use Setnemo\Telegram\Types\Update;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,25 +15,23 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Api
 {
+    public function __construct(protected Serializer $serializer)
+    {
+    }
+
     /**
-     * @param   Request  $request
+     * @param  Request  $request
      *
      * @return Response
+     * @throws TelegramBotException
      */
     public function execute(Request $request): Response
     {
-        $data = null;
-        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
         /** @var Update $update */
-        $update = $serializer->deserialize($request->getContent(), Update::class, 'json');
-        if ($update?->getMessage()?->getEntity()?->isCommand()) {
-            $data = $this->runCommand($update);
-        }
-        return new JsonResponse($data, Response::HTTP_OK);
-    }
+        $update = $this->serializer->deserialize($request->getContent(), Update::class, 'json');
 
-    private function runCommand(Update $update): array
-    {
-
+        return (new \Setnemo\Telegram\Methods\SendMessage(
+            new \Setnemo\Telegram\Methods\DTOs\SendMessage($update->getMessage()->getFrom()->getId(), 'Herak1')
+        ))->createResponse();
     }
 }

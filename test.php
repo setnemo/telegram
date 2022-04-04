@@ -154,7 +154,7 @@ function processMessage($message) {
 
 
 
-define('WEBHOOK_URL', 'https://6a04-192-162-35-235.ngrok.io/test.php');
+define('WEBHOOK_URL', 'https://3675-192-162-35-164.ngrok.io');
 header('Content-Type: application/json');
 
 if (php_sapi_name() == 'cli') {
@@ -163,46 +163,6 @@ if (php_sapi_name() == 'cli') {
     exit;
 }
 
-
-use GuzzleHttp\Client;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerBuilder;
-use Psr\Http\Client\ClientInterface;
-use Setnemo\Telegram\Api;
-use Setnemo\Telegram\ClassStorage;
-use Setnemo\Telegram\Configuration;
-use Setnemo\Telegram\Telegram;
-use Setnemo\Telegram\TelegramBotException;
-
-try {
-    $classStorage = ClassStorage::instance(ClassStorage::class);
-    $serializer = $classStorage::instance(Serializer::class, SerializerBuilder::create()->build());
-    $client = $classStorage::instance(ClientInterface::class, new Client());
-    $configuration = $classStorage::instance(
-        Configuration::class,
-        new Configuration(
-            getenv('BOT_TOKEN'),
-            '')
-    );
-    $api = $classStorage::instance(Api::class, new Api());
-    $Telegram = $classStorage::instance(Telegram::class, new Telegram(
-        $classStorage::instance(Configuration::class),
-        $classStorage::instance(Api::class)
-    ));
-
-    $content = file_get_contents("php://input");
-
-    /** @var Update $update */
-    $update = $serializer->deserialize($content, Update::class, 'json');
-
-    $d = (new \Setnemo\Telegram\Methods\SendMessage(
-        new \Setnemo\Telegram\Methods\DTOs\SendMessage($update->getMessage()->getFrom()->getId(), 'Herak', 'html')
-    ))->sendRequestWithResponse();
-    var_export($d);
-} catch (TelegramBotException|ClientExceptionInterface $e) {
-var_export($e);}
-
-//
-//if (isset($update["message"])) {
-//    processMessage($update["message"]);
-//}
+if (isset($update["message"])) {
+    processMessage($update["message"]);
+}

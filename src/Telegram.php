@@ -26,7 +26,7 @@ class Telegram
         $this->api = $api;
     }
 
-    public function entry(Request $request): Response
+    public function entry(Request $request)
     {
         $this->before($request);
         $result = $this->execute($request);
@@ -35,21 +35,21 @@ class Telegram
         return $result;
     }
 
-    public function before(Request $request)
+    protected function before(Request $request)
     {
         foreach ($this->configuration->getMiddlewares() as $middleware) {
             $middleware->before($request);
         }
     }
 
-    public function after(Request $request)
+    protected function after(Request $request)
     {
         foreach ($this->configuration->getMiddlewares() as $middleware) {
             $middleware->after($request);
         }
     }
 
-    public function execute(Request $request): Response
+    protected function execute(Request $request)
     {
         return $this->api->execute($request);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setnemo\Telegram\Methods;
 
 use Setnemo\Telegram\Methods\DTOs\TelegramResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Interface MethodContract
@@ -14,6 +15,6 @@ use Setnemo\Telegram\Methods\DTOs\TelegramResponse;
 interface MethodContract
 {
     public function methodName(): string;
-    public function printResponse(): void;
-    public function sendRequestWithResponse(): TelegramResponse;
+    public function createResponse(): JsonResponse;
+    public function sendRequestWithResponse();
 }

@@ -11,12 +11,12 @@ namespace Setnemo\Telegram;
 class Configuration
 {
     private string $botToken;
-    private string $botName;
+    private string|null $webhookUrl;
 
-    public function __construct(string $botToken, string $botName)
+    public function __construct(string $botToken, string $webhookUrl = null)
     {
-        $this->botToken = $botToken;
-        $this->botName = $botName;
+        $this->botToken   = $botToken;
+        $this->webhookUrl = $webhookUrl;
     }
 
     /**
@@ -28,15 +28,26 @@ class Configuration
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBotName(): string
+    public function getWebhookUrl(): ?string
     {
-        return $this->botName;
+        return $this->webhookUrl;
     }
 
+    /**
+     * @return array
+     */
     public function getMiddlewares(): array
     {
         return [];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWebhookRequest(): bool
+    {
+        return true;
     }
 }

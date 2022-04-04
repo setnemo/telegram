@@ -9,6 +9,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use JMS\Serializer\Serializer;
 use Setnemo\Telegram\Configuration;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AbstractMethod
@@ -48,16 +50,20 @@ class AbstractMethod implements MethodContract
         return static::METHOD_NAME;
     }
 
-    public function printResponse(): void
+    public function createResponse(): JsonResponse
     {
-        header('Content-Type: application/json');
-        echo $this->serializer->serialize(static::getDto()->toArray(), self::JSON);
+        $toArray = static::getDto()->toArray();
+
+        return new JsonResponse(
+            array_filter($toArray, static function($value) { return !is_null($value); }),
+            Response::HTTP_OK
+        );
     }
 
     /**
      * @throws ClientExceptionInterface
      */
-    public function sendRequestWithResponse(): DTOs\TelegramResponse
+    public function sendRequestWithResponse()
     {
         $response = $this->client->sendRequest(new Request(
             \Symfony\Component\HttpFoundation\Request::METHOD_POST,
